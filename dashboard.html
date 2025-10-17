@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>실시간 뉴스 키워드</title>
+    <style>
+        /* CSS 스타일은 이전과 동일합니다 */
+        html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; background-color: #f0f2f5; overflow: hidden; }
+        .page-wrapper { display: flex; flex-direction: column; height: 100%; }
+        .container { flex-grow: 1; display: flex; flex-direction: column; padding: 0 20px 20px 20px; box-sizing: border-box; }
+        #wordcloud { flex-grow: 1; width: 95%; margin: 0 auto 20px auto; border: 1px solid #ccc; background-color: white; cursor: pointer; position: relative; }
+        .settings-bar { background-color: #fff; padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; height: 40px; z-index: 100; }
+        /* ... (이하 모든 CSS는 이전과 동일) ... */
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="settings-bar">
+             <span id="current-keywords"></span>
+             <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
+        </div>
+        <div class="container">
+            <p class="timestamp">마지막 업데이트: <span id="update-time"></span></p>
+            <div id="wordcloud"></div>
+        </div>
+    </div>
+    <div id="article-modal" class="modal-overlay">...</div>
+
+    <script src="https://cdn.jsdelivr.net/gh/timdream/wordcloud2.js/src/wordcloud2.js"></script>
+    <script>
+        // --- [1. 설정 (사용자가 직접 수정해야 할 부분)] ---
+        const USERNAME = "ryuroot"; // 본인의 GitHub 사용자 이름을 입력하세요.
+        const WORDCLOUD_GIST_ID = "c3699def6985776859afb4e8af7cc6fd";
+        const ARTICLE_MAP_GIST_ID = "0bb5b2c301317173f8f509179e316273";
+
+        // --- [2. Gist 데이터 URL 생성] ---
+        // Gist의 'Raw' 파일 주소를 동적으로 생성합니다.
+        const WORDCLOUD_URL = `https://gist.githubusercontent.com/${USERNAME}/${WORDCLOUD_GIST_ID}/raw/wordcloud_data.json`;
+        const ARTICLE_MAP_URL = `https://gist.githubusercontent.com/${USERNAME}/${ARTICLE_MAP_GIST_ID}/raw/article_map.json`;
+
+        // --- [3. 나머지 자바스크립트 코드 (Gist URL 사용)] ---
+        document.getElementById('update-time').innerText = new Date().toLocaleString();
+        
+        // ... (모달 관련 변수 선언 등은 이전과 동일) ...
+
+        function initializeDashboard() {
+            // Promise.all을 사용하여 두 Gist 파일을 모두 불러옵니다.
+            Promise.all([
+                fetch(WORDCLOUD_URL).then(res => res.json()),
+                fetch(ARTICLE_MAP_URL).then(res => res.json())
+            ]).then(([wordcloudJson, articleMap]) => {
+                // ... (워드 클라우드를 그리는 로직은 이전과 동일) ...
+            }).catch(error => {
+                console.error('데이터 로딩 중 오류:', error);
+                document.getElementById('wordcloud').innerText = '데이터를 불러오는 데 실패했습니다.';
+            });
+        }
+        
+        initializeDashboard();
+        // 5분마다 페이지를 자동으로 새로고침
+        setTimeout(() => { location.reload(); }, 300000);
+    </script>
+</body>
+</html>
