@@ -4,19 +4,29 @@
     <meta charset="UTF-8">
     <title>실시간 뉴스 키워드</title>
     <style>
-        /* CSS 스타일은 이전과 동일합니다 */
         html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; background-color: #f0f2f5; overflow: hidden; }
         .page-wrapper { display: flex; flex-direction: column; height: 100%; }
         .container { flex-grow: 1; display: flex; flex-direction: column; padding: 0 20px 20px 20px; box-sizing: border-box; }
         #wordcloud { flex-grow: 1; width: 95%; margin: 0 auto 20px auto; border: 1px solid #ccc; background-color: white; cursor: pointer; position: relative; }
         .settings-bar { background-color: #fff; padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; height: 40px; z-index: 100; }
-        /* ... (이하 모든 CSS는 이전과 동일) ... */
+        .info-text { margin-left: auto; font-size: 0.8em; color: #666; align-self: center; }
+        .timestamp { text-align: center; color: #555; padding-top: 15px; flex-shrink: 0; }
+        @keyframes blink-animation { 50% { opacity: 0.2; } }
+        .blinking-word { animation: blink-animation 1.5s infinite; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
+        .close-btn { float: right; font-size: 1.5rem; cursor: pointer; line-height: 1; }
+        .article-meta { font-size: 0.8em; color: #666; margin-top: 4px; }
+        .modal-content h2 { margin-top: 0; }
+        .modal-content ul { list-style-type: none; padding-left: 0; }
+        .modal-content li { margin-bottom: 15px; }
+        .modal-content a { text-decoration: none; color: #0056b3; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="page-wrapper">
         <div class="settings-bar">
-             <span id="current-keywords"></span>
+             <span id="current-keywords" style="font-size: 0.9em; color: #333;"></span>
              <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
         </div>
         <div class="container">
@@ -24,41 +34,86 @@
             <div id="wordcloud"></div>
         </div>
     </div>
-    <div id="article-modal" class="modal-overlay">...</div>
+    
+    <div id="article-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modal-keyword"></h2>
+            <ul id="article-list"></ul>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/gh/timdream/wordcloud2.js/src/wordcloud2.js"></script>
     <script>
-        // --- [1. 설정 (사용자가 직접 수정해야 할 부분)] ---
-        const USERNAME = "ryuroot"; // 본인의 GitHub 사용자 이름을 입력하세요.
+        // --- [1. Gist 설정] ---
+        const USERNAME = "ryuroot"; // 본인의 GitHub 사용자 이름
         const WORDCLOUD_GIST_ID = "c3699def6985776859afb4e8af7cc6fd";
         const ARTICLE_MAP_GIST_ID = "0bb5b2c301317173f8f509179e316273";
 
         // --- [2. Gist 데이터 URL 생성] ---
-        // Gist의 'Raw' 파일 주소를 동적으로 생성합니다.
-        const WORDCLOUD_URL = `https://gist.githubusercontent.com/${USERNAME}/${WORDCLOUD_GIST_ID}/raw/wordcloud_data.json`;
-        const ARTICLE_MAP_URL = `https://gist.githubusercontent.com/${USERNAME}/${ARTICLE_MAP_GIST_ID}/raw/article_map.json`;
+        // Gist의 'Raw' 파일 주소를 동적으로 생성합니다. ?_=<현재시간>을 붙여 캐시 문제를 방지합니다.
+        const WORDCLOUD_URL = `https://gist.githubusercontent.com/${USERNAME}/${WORDCLOUD_GIST_ID}/raw/wordcloud_data.json?_=${new Date().getTime()}`;
+        const ARTICLE_MAP_URL = `https://gist.githubusercontent.com/${USERNAME}/${ARTICLE_MAP_GIST_ID}/raw/article_map.json?_=${new Date().getTime()}`;
 
-        // --- [3. 나머지 자바스크립트 코드 (Gist URL 사용)] ---
-        document.getElementById('update-time').innerText = new Date().toLocaleString();
-        
-        // ... (모달 관련 변수 선언 등은 이전과 동일) ...
+        // --- [3. 나머지 자바스크립트 코드] ---
+        const modal = document.getElementById('article-modal');
+        const modalKeyword = document.getElementById('modal-keyword');
+        const articleList = document.getElementById('article-list');
+        const closeBtn = document.querySelector('.close-btn');
+
+        closeBtn.onclick = () => { modal.style.display = 'none'; };
+        modal.onclick = (event) => { if (event.target === modal) { modal.style.display = 'none'; }};
 
         function initializeDashboard() {
-            // Promise.all을 사용하여 두 Gist 파일을 모두 불러옵니다.
+            document.getElementById('update-time').innerText = new Date().toLocaleString();
+            
             Promise.all([
                 fetch(WORDCLOUD_URL).then(res => res.json()),
                 fetch(ARTICLE_MAP_URL).then(res => res.json())
             ]).then(([wordcloudJson, articleMap]) => {
-                // ... (워드 클라우드를 그리는 로직은 이전과 동일) ...
+                const wordcloudData = wordcloudJson.keywords;
+                const recentKeywords = new Set(wordcloudJson.recent_keywords);
+                
+                if (!wordcloudData || wordcloudData.length === 0) {
+                    throw new Error("키워드 데이터가 비어있습니다. 잠시 후 자동 새로고침됩니다.");
+                }
+
+                WordCloud(document.getElementById('wordcloud'), { 
+                    list: wordcloudData, backgroundColor: '#ffffff', fontFamily: 'Malgun Gothic, sans-serif',
+                    weightFactor: 10, minSize: 10,
+                    classes: function(word, weight) {
+                        return recentKeywords.has(word) ? 'blinking-word' : null;
+                    },
+                    click: function(item) {
+                        const keyword = item[0];
+                        const articles = articleMap[keyword] || [];
+                        modalKeyword.innerText = `'${keyword}' 관련 뉴스`;
+                        articleList.innerHTML = '';
+                        if (articles.length > 0) {
+                            articles.forEach(article => {
+                                const listItem = document.createElement('li');
+                                const link = document.createElement('a');
+                                link.href = article.url; link.textContent = article.title; link.target = '_blank';
+                                const meta = document.createElement('div');
+                                meta.className = 'article-meta';
+                                meta.textContent = `${article.source} - ${article.time_ago}`;
+                                listItem.appendChild(link); listItem.appendChild(meta);
+                                articleList.appendChild(listItem);
+                            });
+                        } else {
+                            articleList.innerHTML = '<li>관련 기사를 찾을 수 없습니다.</li>';
+                        }
+                        modal.style.display = 'flex';
+                    }
+                });
             }).catch(error => {
                 console.error('데이터 로딩 중 오류:', error);
-                document.getElementById('wordcloud').innerText = '데이터를 불러오는 데 실패했습니다.';
+                document.getElementById('wordcloud').innerText = '오류: ' + error.message + ' (F12를 눌러 콘솔을 확인하세요)';
             });
         }
         
         initializeDashboard();
-        // 5분마다 페이지를 자동으로 새로고침
-        setTimeout(() => { location.reload(); }, 300000);
+        setTimeout(() => { location.reload(); }, 300000); // 5분마다 페이지 새로고침
     </script>
 </body>
 </html>
