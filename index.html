@@ -5,11 +5,12 @@
     <title>실시간 뉴스 키워드</title>
     <style>
         html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; background-color: #f0f2f5; overflow: hidden; }
-        .page-wrapper { display: flex; flex-direction: column; height: 100%; }
-        .container { flex-grow: 1; display: flex; flex-direction: column; padding: 0 20px 20px 20px; box-sizing: border-box; }
+        .settings-bar { position: fixed; top: 0; left: 0; right: 0; background-color: #fff; padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; height: 40px; z-index: 100; font-size: 0.9em; color: #333; }
+        .setting-item { display: flex; align-items: center; gap: 8px; }
+        .setting-item strong { color: #000; }
+        .container { padding-top: 75px; height: calc(100vh - 75px); display: flex; flex-direction: column; box-sizing: border-box; }
         #wordcloud { flex-grow: 1; width: 95%; margin: 0 auto 20px auto; border: 1px solid #ccc; background-color: white; cursor: pointer; position: relative; }
-        .settings-bar { background-color: #fff; padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; height: 40px; z-index: 100; }
-        .info-text { margin-left: auto; font-size: 0.8em; color: #666; align-self: center; }
+        .info-text { margin-left: auto; font-size: 0.9em; color: #666; align-self: center; }
         .timestamp { text-align: center; color: #555; padding-top: 15px; flex-shrink: 0; }
         @keyframes blink-animation { 50% { opacity: 0.2; } }
         .blinking-word { animation: blink-animation 1.5s infinite; }
@@ -24,15 +25,21 @@
     </style>
 </head>
 <body>
-    <div class="page-wrapper">
-        <div class="settings-bar">
-             <span id="current-keywords" style="font-size: 0.9em; color: #333;"></span>
-             <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
+    <div class="settings-bar">
+        <div class="setting-item">
+            <strong>키워드:</strong> <span id="current-keywords"></span>
         </div>
-        <div class="container">
-            <p class="timestamp">마지막 업데이트: <span id="update-time"></span></p>
-            <div id="wordcloud"></div>
+        <div class="setting-item">
+            <strong>새로고침:</strong> <span id="refresh-interval"></span>
         </div>
+        <div class="setting-item">
+            <strong>최신 뉴스 기준:</strong> <span id="recent-minutes"></span>
+        </div>
+        <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
+    </div>
+    <div class="container">
+        <p class="timestamp">마지막 업데이트: <span id="update-time"></span></p>
+        <div id="wordcloud"></div>
     </div>
     
     <div id="article-modal" class="modal-overlay">
@@ -45,17 +52,13 @@
 
     <script src="https://cdn.jsdelivr.net/gh/timdream/wordcloud2.js/src/wordcloud2.js"></script>
     <script>
-        // --- [1. Gist 설정] ---
-        const USERNAME = "ryuroot"; // 본인의 GitHub 사용자 이름
+        const USERNAME = "ryuroot";
         const WORDCLOUD_GIST_ID = "c3699def6985776859afb4e8af7cc6fd";
         const ARTICLE_MAP_GIST_ID = "0bb5b2c301317173f8f509179e316273";
 
-        // --- [2. Gist 데이터 URL 생성] ---
-        // Gist의 'Raw' 파일 주소를 동적으로 생성합니다. ?_=<현재시간>을 붙여 캐시 문제를 방지합니다.
-        const WORDCLOUD_URL = `https://gist.githubusercontent.com/${USERNAME}/${WORDCLOUD_GIST_ID}/raw/wordcloud_data.json?_=${new Date().getTime()}`;
-        const ARTICLE_MAP_URL = `https://gist.githubusercontent.com/${USERNAME}/${ARTICLE_MAP_GIST_ID}/raw/article_map.json?_=${new Date().getTime()}`;
+        const WORDCLOUD_URL = `https://gist.githubusercontent.com/${USERNAME}/${WORDCLOUD_GIST_ID}/raw/wordcloud_data.json?t=${new Date().getTime()}`;
+        const ARTICLE_MAP_URL = `https://gist.githubusercontent.com/${USERNAME}/${ARTICLE_MAP_GIST_ID}/raw/article_map.json?t=${new Date().getTime()}`;
 
-        // --- [3. 나머지 자바스크립트 코드] ---
         const modal = document.getElementById('article-modal');
         const modalKeyword = document.getElementById('modal-keyword');
         const articleList = document.getElementById('article-list');
@@ -66,6 +69,11 @@
 
         function initializeDashboard() {
             document.getElementById('update-time').innerText = new Date().toLocaleString();
+            
+            // 임시로 하드코딩된 설정 표시 (Gist에는 설정 파일이 없으므로)
+            document.getElementById('current-keywords').textContent = "코레일, 지하철 지연";
+            document.getElementById('refresh-interval').textContent = "5분";
+            document.getElementById('recent-minutes').textContent = "20분";
             
             Promise.all([
                 fetch(WORDCLOUD_URL).then(res => res.json()),
@@ -113,7 +121,7 @@
         }
         
         initializeDashboard();
-        setTimeout(() => { location.reload(); }, 300000); // 5분마다 페이지 새로고침
+        setTimeout(() => { location.reload(); }, 300000);
     </script>
 </body>
 </html>
