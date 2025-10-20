@@ -44,25 +44,26 @@
             position: relative; 
         }
         .info-text { margin-left: auto; font-size: 0.9em; color: #666; align-self: center; }
-        .timestamp { text-align: center; color: #555; padding-top: 15px; flex-shrink: 0; }
         
-        /* ▼▼▼ [핵심 2] 다운로드 링크 스타일 추가 ▼▼▼ */
-        .download-link {
+        /* ▼▼▼ [핵심 1] 업데이트 및 다운로드 링크 스타일 수정 ▼▼▼ */
+        .header-info {
             text-align: center;
-            font-size: 0.9em;
             color: #555;
-            padding-bottom: 10px; /* 워드클라우드와의 간격 */
+            padding-top: 15px;
+            flex-shrink: 0;
+            font-size: 0.9em;
         }
-        .download-link a {
+        .download-link {
+            margin-left: 15px;
             color: #007bff;
             text-decoration: none;
             font-weight: bold;
         }
-        .download-link a:hover {
+        .download-link:hover {
             text-decoration: underline;
         }
-        /* ▲▲▲ [핵심 2] 추가 완료 ▲▲▲ */
-        
+        /* ▲▲▲ [핵심 1] 수정 완료 ▲▲▲ */
+
         @keyframes blink-animation { 50% { opacity: 0.2; } }
         .blinking-word { animation: blink-animation 1.5s infinite; }
         
@@ -72,40 +73,29 @@
         .close-btn { float: right; font-size: 1.5rem; cursor: pointer; line-height: 1; }
         .modal-content h2 { margin-top: 0; }
         .modal-content ul { list-style-type: none; padding-left: 0; }
-        .modal-content li { margin-bottom: 8px; } /* [핵심 1] 목록 간격을 10px로 살짝 줄임 */
+        .modal-content li { margin-bottom: 8px; } /* [핵심 2] 목록 간격을 8px로 더 줄임 */
         .modal-content a { 
             text-decoration: none; 
             color: #0056b3; 
             font-weight: bold; 
-            font-size: 0.8em; /* [핵심 1] 기사 제목 글자 크기를 1em(기본)으로 살짝 줄임 */
+            font-size: 0.9em; /* [핵심 2] 기사 제목 글자 크기를 0.9em으로 더 줄임 */
         }
         .article-meta { 
-            font-size: 0.8em; /* [핵심 1] 신문사/시간 글자 크기를 0.8em으로 줄임 */
+            font-size: 0.75em; /* [핵심 2] 신문사/시간 글자 크기를 0.75em으로 더 줄임 */
             color: #666; 
             margin-top: 2px; 
         }
-
-        /* ▼▼▼ [핵심 3] 모바일 반응형 CSS 추가 ▼▼▼ */
+        
+        /* --- 모바일 반응형 --- */
         @media (max-width: 768px) {
-            .settings-bar {
-                height: auto; /* 모바일에서는 설정창 높이 자동 조절 */
-                flex-direction: column;
-                align-items: flex-start;
-                padding-bottom: 10px;
-            }
+            .settings-bar { height: auto; flex-direction: column; align-items: flex-start; padding-bottom: 10px; }
             .info-text { margin-left: 0; margin-top: 10px; }
-            .container { 
-                padding-top: 100px; /* 모바일 설정창이 길어지므로 여백 더 줌 */
-                height: calc(100vh - 100px); 
-            }
-            .timestamp { padding-top: 10px; }
-            #wordcloud { width: 100%; height: 60vh; } /* 모바일에서 워드클라우드 높이 조절 */
-            .modal-content { width: 95%; padding: 15px; }
-            .modal-content h2 { font-size: 1.2em; }
-            .modal-content a { font-size: 0.95em; }
-            .article-meta { font-size: 0.75em; }
+            .container { padding-top: 100px; height: calc(100vh - 100px); }
+            .header-info { font-size: 0.8em; } /* 모바일에서 글자 더 작게 */
+            #wordcloud { width: 100%; height: 60vh; }
+            .modal-content a { font-size: 0.9em; }
+            .article-meta { font-size: 0.7em; }
         }
-        /* ▲▲▲ [핵심 3] 추가 완료 ▲▲▲ */
     </style>
 </head>
 <body>
@@ -123,10 +113,9 @@
              <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
         </div>
         <div class="container">
-            <p class="timestamp">마지막 업데이트: <span id="update-time"></span></p>
-            
-            <p class="download-link">
-                <a href="https://drive.google.com/file/d/1md68MgTuPPUnCgLmLdj9fJf4p9i8Cjpl/view" target="_blank">
+            <p class="header-info">
+                <span id="update-time">마지막 업데이트:</span>
+                <a class="download-link" href="https://drive.google.com/file/d/1md68MgTuPPUnCgLmLdj9fJf4p9i8Cjpl/view" target="_blank">
                     실행 파일 다운로드(설정 조정 가능, 외부 pc 꺼짐 방지 포함)
                 </a>
             </p>
@@ -163,9 +152,8 @@
         modal.onclick = (event) => { if (event.target === modal) { modal.style.display = 'none'; }};
 
         function initializeDashboard() {
-            document.getElementById('update-time').innerText = new Date().toLocaleString();
+            document.getElementById('update-time').innerText = `마지막 업데이트: ${new Date().toLocaleString()}`;
             
-            // 임시로 하드코딩된 설정 표시 (Gist에는 설정 파일이 없으므로)
             document.getElementById('current-keywords').textContent = "코레일, 지하철 지연";
             document.getElementById('refresh-interval').textContent = "5분";
             document.getElementById('recent-minutes').textContent = "20분";
@@ -220,4 +208,3 @@
     </script>
 </body>
 </html>
-
