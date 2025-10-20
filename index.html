@@ -12,6 +12,7 @@
             background-color: #f0f2f5; 
             overflow: hidden; 
         }
+        
         .settings-bar { 
             position: fixed; 
             top: 0; left: 0; right: 0; 
@@ -30,8 +31,10 @@
             -webkit-overflow-scrolling: touch; 
         }
         .settings-bar::-webkit-scrollbar { display: none; }
+        
         .settings-bar strong { color: #000; flex-shrink: 0; }
         .settings-bar span { flex-shrink: 0; }
+        
         .update-download-info { 
             display: flex; 
             align-items: center; 
@@ -41,6 +44,7 @@
         }
         .update-download-info a { color: #007bff; text-decoration: none; font-weight: bold; }
         .update-download-info a:hover { text-decoration: underline; }
+        
         .container { 
             padding-top: 40px; 
             height: calc(100vh - 40px); 
@@ -48,6 +52,7 @@
             flex-direction: column; 
             box-sizing: border-box; 
         }
+        
         #wordcloud { 
             flex-grow: 1; 
             width: 98%; 
@@ -57,6 +62,7 @@
             cursor: pointer; 
             position: relative; 
         }
+        
         @keyframes blink-animation { 50% { opacity: 0.2; } }
         .blinking-word { animation: blink-animation 1.5s infinite; }
         
@@ -67,10 +73,10 @@
         .modal-content h2 { margin-top: 0; }
         .modal-content ul { list-style-type: none; padding-left: 0; }
         
-        /* ▼▼▼ [핵심 1] PC 팝업 글자 크기 (기존의 약 2/3 수준) ▼▼▼ */
-        .modal-content li { margin-bottom: 5px; } /* 목록 간격 줄임 */
-        .modal-content a { font-size: 0.4em; font-weight: bold; text-decoration: none; color: #0056b3; } /* 기존 0.85em -> 0.6em */
-        .article-meta { font-size: 0.2em; color: #666; margin-top: 2px; } /* 기존 0.7em -> 0.5em */
+        /* ▼▼▼ [핵심 1] PC 팝업 글자 크기 (2/3 수준) ▼▼▼ */
+        .modal-content li { margin-bottom: 6px; } 
+        .modal-content a { font-size: 0.6em; font-weight: bold; text-decoration: none; color: #0056b3; } /* 기존 0.85em -> 0.6em */
+        .article-meta { font-size: 0.5em; color: #666; margin-top: 2px; } /* 기존 0.7em -> 0.5em */
         
         /* --- 모바일 반응형 --- */
         @media (max-width: 768px) {
@@ -80,11 +86,11 @@
             .update-download-info a { font-size: 0.7em; }
             #wordcloud { width: 100%; margin-bottom: 5px; }
             
-            /* ▼▼▼ [핵심 2] 모바일 팝업 글자 크기 (기존의 약 1/3 수준) ▼▼▼ */
-            .modal-content h2 { font-size: 1.0em; } /* 모바일 제목 크기 */
-            .modal-content li { margin-bottom: 3px; } /* 모바일 목록 간격 */
-            .modal-content a { font-size: 0.2em; } /* 기존 0.8em -> 0.3em (약 1/3) */
-            .article-meta { font-size: 0.1em; } /* 기존 0.65em -> 0.25em (약 1/3) */
+            /* ▼▼▼ [핵심 2] 모바일 팝업 글자 크기 (1/3 수준) ▼▼▼ */
+            .modal-content h2 { font-size: 1.0em; }
+            .modal-content li { margin-bottom: 3px; }
+            .modal-content a { font-size: 0.3em; } /* 기존 0.7em -> 0.3em */
+            .article-meta { font-size: 0.25em; } /* 기존 0.65em -> 0.25em */
         }
     </style>
 </head>
@@ -198,4 +204,3 @@
     </script>
 </body>
 </html>
-
