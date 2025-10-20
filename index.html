@@ -2,126 +2,254 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>실시간 뉴스 키워드</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실시간 뉴스 키워드 대시보드</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; background-color: #f0f2f5; overflow: hidden; }
-        .settings-bar { position: fixed; top: 0; left: 0; right: 0; background-color: #fff; padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; height: 40px; z-index: 100; font-size: 0.9em; color: #333; }
-        .setting-item { display: flex; align-items: center; gap: 8px; }
-        .setting-item strong { color: #000; }
-        .container { padding-top: 75px; height: calc(100vh - 75px); display: flex; flex-direction: column; box-sizing: border-box; }
-        #wordcloud { flex-grow: 1; width: 95%; margin: 0 auto 20px auto; border: 1px solid #ccc; background-color: white; cursor: pointer; position: relative; }
-        .info-text { margin-left: auto; font-size: 0.9em; color: #666; align-self: center; }
-        .timestamp { text-align: center; color: #555; padding-top: 15px; flex-shrink: 0; }
-        @keyframes blink-animation { 50% { opacity: 0.2; } }
-        .blinking-word { animation: blink-animation 1.5s infinite; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
-        .close-btn { float: right; font-size: 1.5rem; cursor: pointer; line-height: 1; }
-        .article-meta { font-size: 0.8em; color: #666; margin-top: 4px; }
-        .modal-content h2 { margin-top: 0; }
-        .modal-content ul { list-style-type: none; padding-left: 0; }
-        .modal-content li { margin-bottom: 15px; }
-        .modal-content a { text-decoration: none; color: #0056b3; font-weight: bold; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em; /* Default for desktop */
+        }
+        .last-updated, .download-link {
+            text-align: right;
+            font-size: 0.9em;
+            color: #777;
+            margin-top: -10px; /* Pull up slightly */
+            margin-bottom: 10px;
+        }
+        .download-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .download-link a:hover {
+            text-decoration: underline;
+        }
+        .content-section {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping for mobile */
+            gap: 20px;
+        }
+        .main-content, .sidebar {
+            flex: 1;
+            min-width: 300px; /* Minimum width before wrapping */
+        }
+        .main-content {
+            flex: 2; /* Main content takes more space */
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.8em; /* Default for desktop */
+        }
+        .wordcloud-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .wordcloud-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .news-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        .news-list li {
+            background-color: #fdfdfd;
+            border: 1px solid #e7e7e7;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 15px;
+            transition: transform 0.2s;
+        }
+        .news-list li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .news-list li a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 1.1em; /* Default for desktop */
+            display: block;
+            margin-bottom: 5px;
+        }
+        .news-list li a:hover {
+            color: #007bff;
+        }
+        .news-list li p {
+            font-size: 0.85em; /* **뉴스 본문 글자 크기 축소** */
+            color: #555;
+            margin: 0;
+        }
+        .news-list li .source-date {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* 반응형 디자인을 위한 미디어 쿼리 */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                margin: 10px auto;
+                padding: 15px;
+            }
+            header h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            .content-section {
+                flex-direction: column; /* Stacks columns vertically */
+            }
+            .main-content, .sidebar {
+                min-width: unset; /* Remove min-width for mobile */
+                width: 100%; /* Take full width */
+            }
+            .news-list li a {
+                font-size: 1em;
+            }
+            .news-list li p {
+                font-size: 0.8em; /* Even smaller for mobile */
+            }
+            .last-updated, .download-link {
+                text-align: center; /* Center align for mobile */
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="settings-bar">
-        <div class="setting-item">
-            <strong>키워드:</strong> <span id="current-keywords"></span>
-        </div>
-        <div class="setting-item">
-            <strong>새로고침:</strong> <span id="refresh-interval"></span>
-        </div>
-        <div class="setting-item">
-            <strong>최신 뉴스 기준:</strong> <span id="recent-minutes"></span>
-        </div>
-        <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
-    </div>
     <div class="container">
-        <p class="timestamp">마지막 업데이트: <span id="update-time"></span></p>
-        <div id="wordcloud"></div>
-    </div>
-    
-    <div id="article-modal" class="modal-overlay">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2 id="modal-keyword"></h2>
-            <ul id="article-list"></ul>
+        <header>
+            <h1>실시간 뉴스 키워드 대시보드</h1>
+            <p>선택된 키워드에 대한 최신 뉴스 트렌드를 시각적으로 확인하세요.</p>
+        </header>
+
+        <div class="last-updated" id="last-updated">
+            마지막 업데이트:
+        </div>
+        <div class="download-link">
+            <a href="https://drive.google.com/file/d/1md68MgTuPPUnCgLmLdj9fJf4p9i8Cjpl/view" target="_blank">
+                실행 파일 다운로드(설정 조정 가능, 외부 pc 꺼짐 방지 포함)
+            </a>
+        </div>
+
+        <div class="content-section">
+            <div class="main-content">
+                <h2>최신 뉴스 목록</h2>
+                <div class="news-list">
+                    <ul id="news-articles">
+                        <li>뉴스 기사를 불러오는 중...</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="sidebar">
+                <h2>실시간 인기 키워드</h2>
+                <div class="wordcloud-container">
+                    <img id="wordcloud-image" src="" alt="워드 클라우드 이미지 로딩 중...">
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/gh/timdream/wordcloud2.js/src/wordcloud2.js"></script>
     <script>
-        const USERNAME = "ryuroot";
-        const WORDCLOUD_GIST_ID = "c3699def6985776859afb4e8af7cc6fd";
-        const ARTICLE_MAP_GIST_ID = "0bb5b2c301317173f8f509179e316273";
-
-        const WORDCLOUD_URL = `https://gist.githubusercontent.com/${USERNAME}/${WORDCLOUD_GIST_ID}/raw/wordcloud_data.json?t=${new Date().getTime()}`;
-        const ARTICLE_MAP_URL = `https://gist.githubusercontent.com/${USERNAME}/${ARTICLE_MAP_GIST_ID}/raw/article_map.json?t=${new Date().getTime()}`;
-
-        const modal = document.getElementById('article-modal');
-        const modalKeyword = document.getElementById('modal-keyword');
-        const articleList = document.getElementById('article-list');
-        const closeBtn = document.querySelector('.close-btn');
-
-        closeBtn.onclick = () => { modal.style.display = 'none'; };
-        modal.onclick = (event) => { if (event.target === modal) { modal.style.display = 'none'; }};
-
-        function initializeDashboard() {
-            document.getElementById('update-time').innerText = new Date().toLocaleString();
-            
-            // 임시로 하드코딩된 설정 표시 (Gist에는 설정 파일이 없으므로)
-            document.getElementById('current-keywords').textContent = "코레일, 지하철 지연";
-            document.getElementById('refresh-interval').textContent = "5분";
-            document.getElementById('recent-minutes').textContent = "20분";
-            
-            Promise.all([
-                fetch(WORDCLOUD_URL).then(res => res.json()),
-                fetch(ARTICLE_MAP_URL).then(res => res.json())
-            ]).then(([wordcloudJson, articleMap]) => {
-                const wordcloudData = wordcloudJson.keywords;
-                const recentKeywords = new Set(wordcloudJson.recent_keywords);
-                
-                if (!wordcloudData || wordcloudData.length === 0) {
-                    throw new Error("키워드 데이터가 비어있습니다. 잠시 후 자동 새로고침됩니다.");
-                }
-
-                WordCloud(document.getElementById('wordcloud'), { 
-                    list: wordcloudData, backgroundColor: '#ffffff', fontFamily: 'Malgun Gothic, sans-serif',
-                    weightFactor: 10, minSize: 10,
-                    classes: function(word, weight) {
-                        return recentKeywords.has(word) ? 'blinking-word' : null;
-                    },
-                    click: function(item) {
-                        const keyword = item[0];
-                        const articles = articleMap[keyword] || [];
-                        modalKeyword.innerText = `'${keyword}' 관련 뉴스`;
-                        articleList.innerHTML = '';
-                        if (articles.length > 0) {
-                            articles.forEach(article => {
-                                const listItem = document.createElement('li');
-                                const link = document.createElement('a');
-                                link.href = article.url; link.textContent = article.title; link.target = '_blank';
-                                const meta = document.createElement('div');
-                                meta.className = 'article-meta';
-                                meta.textContent = `${article.source} - ${article.time_ago}`;
-                                listItem.appendChild(link); listItem.appendChild(meta);
-                                articleList.appendChild(listItem);
-                            });
-                        } else {
-                            articleList.innerHTML = '<li>관련 기사를 찾을 수 없습니다.</li>';
-                        }
-                        modal.style.display = 'flex';
-                    }
-                });
-            }).catch(error => {
-                console.error('데이터 로딩 중 오류:', error);
-                document.getElementById('wordcloud').innerText = '오류: ' + error.message + ' (F12를 눌러 콘솔을 확인하세요)';
-            });
-        }
+        const GIST_RAW_URL = 'https://gist.githubusercontent.com/ryuroot/YOUR_GIST_ID/raw/news_data.json'; // 여기에 실제 Gist ID를 넣으세요!
+        const GIST_WC_URL = 'https://gist.githubusercontent.com/ryuroot/YOUR_GIST_ID/raw/wordcloud.png'; // 여기에 실제 Gist ID를 넣으세요!
         
-        initializeDashboard();
-        setTimeout(() => { location.reload(); }, 300000);
+        // ** 중요: 위 두 URL의 'YOUR_GIST_ID' 부분을 실제 Gist ID로 변경해주세요. **
+        // 예: https://gist.githubusercontent.com/ryuroot/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6/raw/news_data.json
+
+        async function fetchData() {
+            try {
+                const response = await fetch(GIST_RAW_URL + '?t=' + new Date().getTime()); // 캐시 방지
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error("뉴스 데이터를 불러오는 데 실패했습니다:", error);
+                return null;
+            }
+        }
+
+        function displayNews(newsData) {
+            const newsArticlesDiv = document.getElementById('news-articles');
+            newsArticlesDiv.innerHTML = ''; // 기존 내용 지우기
+
+            if (!newsData || newsData.articles.length === 0) {
+                newsArticlesDiv.innerHTML = '<li>새로운 뉴스 기사가 없습니다.</li>';
+                return;
+            }
+
+            newsData.articles.forEach(article => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <a href="${article.link}" target="_blank">${article.title}</a>
+                    <p>${article.summary || '내용 요약 없음'}</p>
+                    <div class="source-date">${article.source} - ${new Date(article.published_date).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</div>
+                `;
+                newsArticlesDiv.appendChild(listItem);
+            });
+
+            document.getElementById('last-updated').textContent = `마지막 업데이트: ${new Date(newsData.timestamp).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}`;
+        }
+
+        function displayWordCloud() {
+            const wordcloudImage = document.getElementById('wordcloud-image');
+            // Gist에서 이미지를 직접 로드 (캐시 방지를 위해 timestamp 추가)
+            wordcloudImage.src = GIST_WC_URL + '?t=' + new Date().getTime();
+            wordcloudImage.alt = "워드 클라우드 이미지";
+        }
+
+        async function initDashboard() {
+            const data = await fetchData();
+            if (data) {
+                displayNews(data);
+            }
+            displayWordCloud();
+            // 5분마다 데이터 새로고침
+            setInterval(async () => {
+                const updatedData = await fetchData();
+                if (updatedData) {
+                    displayNews(updatedData);
+                }
+                displayWordCloud();
+            }, 5 * 60 * 1000); // 5분 = 300000 밀리초
+        }
+
+        window.onload = initDashboard;
     </script>
 </body>
 </html>
