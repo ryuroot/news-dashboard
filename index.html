@@ -12,64 +12,51 @@
             background-color: #f0f2f5; 
             overflow: hidden; 
         }
-        
-        /* ▼▼▼ [핵심 수정: 상단 설정 바 한 줄로 압축] ▼▼▼ */
         .settings-bar { 
             position: fixed; 
             top: 0; left: 0; right: 0; 
             background-color: #fff; 
-            padding: 8px 15px; /* 패딩 최소화 */
+            padding: 8px 15px; 
             border-bottom: 1px solid #ddd; 
             display: flex; 
             align-items: center; 
-            gap: 12px; /* 항목 간 간격 줄임 */
-            flex-wrap: nowrap; /* 줄바꿈 방지 */
+            gap: 12px; 
+            flex-wrap: nowrap; 
             z-index: 100; 
-            font-size: 0.8em; /* 전체적인 글자 크기 더 줄임 */
+            font-size: 0.8em; 
             color: #333; 
-            white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 */
-            overflow-x: auto; /* 내용이 넘칠 경우 스크롤 */
-            -webkit-overflow-scrolling: touch; /* 모바일 스크롤 부드럽게 */
+            white-space: nowrap; 
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch; 
         }
-        .settings-bar::-webkit-scrollbar { display: none; } /* 스크롤바 숨기기 */
-        
-        .settings-bar strong { color: #000; flex-shrink: 0; } /* 키워드명은 줄어들지 않도록 */
+        .settings-bar::-webkit-scrollbar { display: none; }
+        .settings-bar strong { color: #000; flex-shrink: 0; }
         .settings-bar span { flex-shrink: 0; }
-        
-        /* 마지막 업데이트와 다운로드 링크를 한 묶음으로 처리 */
         .update-download-info { 
             display: flex; 
             align-items: center; 
-            gap: 8px; /* 링크와 업데이트 시간 간격 */
-            margin-left: auto; /* 오른쪽으로 정렬 */
-            flex-shrink: 0; /* 줄어들지 않도록 */
+            gap: 8px; 
+            margin-left: auto; 
+            flex-shrink: 0; 
         }
-        .update-download-info a { 
-            color: #007bff; 
-            text-decoration: none; 
-            font-weight: bold; 
-        }
+        .update-download-info a { color: #007bff; text-decoration: none; font-weight: bold; }
         .update-download-info a:hover { text-decoration: underline; }
-        /* ▲▲▲ [핵심 수정 완료] ▲▲▲ */
-
         .container { 
-            padding-top: 40px; /* 설정 바의 새 높이만큼 여백 (스크롤바 포함 넉넉하게) */
+            padding-top: 40px; 
             height: calc(100vh - 40px); 
             display: flex; 
             flex-direction: column; 
             box-sizing: border-box; 
         }
-        
         #wordcloud { 
-            flex-grow: 1; /* 남은 공간을 모두 차지 */
+            flex-grow: 1; 
             width: 98%; 
-            margin: 0 auto 5px auto; /* 위쪽 마진 제거, 아래쪽 마진 최소화 */
+            margin: 0 auto 5px auto; 
             border: 1px solid #ccc; 
             background-color: white; 
             cursor: pointer; 
             position: relative; 
         }
-        
         @keyframes blink-animation { 50% { opacity: 0.2; } }
         .blinking-word { animation: blink-animation 1.5s infinite; }
         
@@ -79,28 +66,25 @@
         .close-btn { float: right; font-size: 1.5rem; cursor: pointer; line-height: 1; }
         .modal-content h2 { margin-top: 0; }
         .modal-content ul { list-style-type: none; padding-left: 0; }
-        .modal-content li { margin-bottom: 7px; } /* 목록 간격 더 줄임 */
-        .modal-content a { text-decoration: none; color: #0056b3; font-weight: bold; font-size: 0.85em; } /* 기사 제목 글자 크기 더 줄임 */
-        .article-meta { font-size: 0.7em; color: #666; margin-top: 2px; } /* 신문사/시간 글자 크기 더 줄임 */
+        
+        /* ▼▼▼ [핵심 1] PC 팝업 글자 크기 (기존의 약 2/3 수준) ▼▼▼ */
+        .modal-content li { margin-bottom: 5px; } /* 목록 간격 줄임 */
+        .modal-content a { font-size: 0.6em; font-weight: bold; text-decoration: none; color: #0056b3; } /* 기존 0.85em -> 0.6em */
+        .article-meta { font-size: 0.5em; color: #666; margin-top: 2px; } /* 기존 0.7em -> 0.5em */
         
         /* --- 모바일 반응형 --- */
         @media (max-width: 768px) {
-            .settings-bar { 
-                padding: 5px 10px; /* 모바일 패딩 더 줄임 */
-                font-size: 0.4em; /* 모바일 글자 더 작게 */
-                gap: 8px; /* 모바일 항목 간 간격 더 줄임 */
-            }
-            .container { 
-                padding-top: 40px; /* 모바일에서도 동일하게 설정 바 높이 확보 */
-                height: calc(100vh - 40px); 
-            }
-            .update-download-info { 
-                margin-left: 5px; /* 모바일에서 좌측 마진 조정 */
-                gap: 5px; /* 모바일 간격 더 줄임 */
-            }
+            .settings-bar { padding: 5px 10px; font-size: 0.75em; gap: 8px; }
+            .container { padding-top: 40px; height: calc(100vh - 40px); }
+            .update-download-info { margin-left: 5px; gap: 5px; }
             .update-download-info a { font-size: 0.7em; }
-            .modal-content a { font-size: 0.7em; }
-            .article-meta { font-size: 0.65em; }
+            #wordcloud { width: 100%; margin-bottom: 5px; }
+            
+            /* ▼▼▼ [핵심 2] 모바일 팝업 글자 크기 (기존의 약 1/3 수준) ▼▼▼ */
+            .modal-content h2 { font-size: 1.0em; } /* 모바일 제목 크기 */
+            .modal-content li { margin-bottom: 3px; } /* 모바일 목록 간격 */
+            .modal-content a { font-size: 0.3em; } /* 기존 0.8em -> 0.3em (약 1/3) */
+            .article-meta { font-size: 0.25em; } /* 기존 0.65em -> 0.25em (약 1/3) */
         }
     </style>
 </head>
@@ -114,14 +98,14 @@
          </div>
          <div class="setting-item">
             <strong>최신 뉴스 기준:</strong> <span id="recent-minutes"></span>
-            <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
+            <span style="color: #666;">(깜빡이는 글자는 최신 뉴스)</span>
          </div>
          <div class="update-download-info">
             <span id="update-time">마지막 업데이트:</span>
             <a href="https://drive.google.com/file/d/1md68MgTuPPUnCgLmLdj9fJf4p9i8Cjpl/view" target="_blank">
                 실행 파일 다운로드(설정 조정 가능, 외부 pc 꺼짐 방지 포함)
             </a>
-         </div>
+        </div>
     </div>
     
     <div class="container">
@@ -214,6 +198,3 @@
     </script>
 </body>
 </html>
-
-
-
