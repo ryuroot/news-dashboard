@@ -61,13 +61,13 @@
             box-sizing: border-box; 
         }
         
-        /* ▼▼▼ [핵심 수정] 배경색 제거 ▼▼▼ */
+        /* ▼▼▼ [핵심 수정] 안내 문구의 상하 여백(padding)을 줄여 높이를 조절합니다. ▼▼▼ */
         .info-text-mobile {
             display: none; 
             text-align: center;
             font-size: 0.8em;
             color: #666;
-            padding: 8px 0;
+            padding: 4px 0; /* 기존 8px에서 4px로 수정 */
         }
         /* ▲▲▲ [핵심 수정] 완료 ▲▲▲ */
         
@@ -130,7 +130,6 @@
          </div>
          <div class="setting-item">
             <strong>최신 뉴스 기준:</strong> <span id="recent-minutes"></span>
-         <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
          </div>
          <div class="update-download-info">
             <span id="update-time">마지막 업데이트:</span>
@@ -138,6 +137,7 @@
                 실행 파일 다운로드(설정 조정 가능, 외부 pc 꺼짐 방지 포함)
             </a>
          </div>
+         <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
     </div>
     
     <div class="container">
@@ -246,4 +246,5 @@
     </script>
 </body>
 </html>
+
 
