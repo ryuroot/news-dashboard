@@ -177,8 +177,8 @@
                     list: wordcloudData, 
                     backgroundColor: '#ffffff', 
                     fontFamily: 'Malgun Gothic, sans-serif',
-                    weightFactor: 7,  // <--- 1. 이 숫자를 줄이세요
-                    minSize: 2,       // <--- 2. 이 숫자를 줄이세요
+                    weightFactor: 2,  // <--- 1. 이 숫자를 줄이세요
+                    minSize: 0.5,       // <--- 2. 이 숫자를 줄이세요
                     classes: function(word, weight) {
                         return recentKeywords.has(word) ? 'blinking-word' : null;
                     },
@@ -215,6 +215,7 @@
     </script>
 </body>
 </html>
+
 
 
 
