@@ -24,7 +24,7 @@
             gap: 12px; 
             flex-wrap: nowrap; 
             z-index: 100; 
-            font-size: 1em; 
+            font-size: 0.8em; 
             color: #333; 
             white-space: nowrap; 
             overflow-x: auto; 
@@ -45,14 +45,12 @@
         .update-download-info a { color: #007bff; text-decoration: none; font-weight: bold; }
         .update-download-info a:hover { text-decoration: underline; }
         
-        /* ▼▼▼ [핵심 2] info-text 스타일 수정 (오른쪽 자동 정렬 제거) ▼▼▼ */
         .info-text { 
-            margin-left: 5px; /* '최신 뉴스 기준'과의 간격 */
-            font-size: 1em; 
+            margin-left: 5px; 
+            font-size: 0.9em; 
             color: #666; 
             align-self: center; 
         }
-        /* ▲▲▲ [핵심 2] 수정 완료 ▲▲▲ */
         
         .container { 
             padding-top: 40px; 
@@ -61,6 +59,17 @@
             flex-direction: column; 
             box-sizing: border-box; 
         }
+        
+        /* ▼▼▼ [핵심 2] 모바일용 안내 문구 (PC에서는 숨김) ▼▼▼ */
+        .info-text-mobile {
+            display: none; 
+            text-align: center;
+            font-size: 0.8em;
+            color: #666;
+            padding: 8px 0;
+            background-color: #f0f2f5;
+        }
+        /* ▲▲▲ [핵심 2] 추가 완료 ▲▲▲ */
         
         #wordcloud { 
             flex-grow: 1; 
@@ -75,31 +84,46 @@
         @keyframes blink-animation { 50% { opacity: 0.2; } }
         .blinking-word { animation: blink-animation 1.5s infinite; }
         
-        /* --- 모달(팝업) 스타일 --- */
+        /* --- 모달(팝업) 스타일 (글자 크기 축소됨) --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-content { background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
-        .close-btn { float: right; font-size: 1.5rem; cursor: pointer; line-height: 1; } /* 1.5em */
+        .close-btn { float: right; font-size: 1.5rem; cursor: pointer; line-height: 1; }
         .modal-content h2 { margin-top: 0; }
         .modal-content ul { list-style-type: none; padding-left: 0; }
-        
-        /* ▼▼▼ [핵심 1] PC 팝업 글자 크기 (대폭 축소) ▼▼▼ */
-        .modal-content li { margin-bottom: 5px; } 
-        .modal-content a { font-size: 1.0em; font-weight: bold; text-decoration: none; color: #0056b3; } /* 목록 제목 */
-        .article-meta { font-size: 0.7em; color: #666; margin-top: 2px; } /* 목록 날짜 */
+        .modal-content li { margin-bottom: 7px; }
+        .modal-content a { text-decoration: none; color: #0056b3; font-weight: bold; font-size: 0.85em; }
+        .article-meta { font-size: 0.7em; color: #666; margin-top: 2px; }
         
         /* --- 모바일 반응형 --- */
         @media (max-width: 768px) {
-            .settings-bar { padding: 5px 10px; font-size: 1em; gap: 8px; }
-            .container { padding-top: 40px; height: calc(100vh - 40px); }
-            .update-download-info { margin-left: 5px; gap: 5px; }
-            .update-download-info a { font-size: 0.7em; }
-            #wordcloud { width: 100%; margin-bottom: 5px; }
+            .settings-bar { 
+                padding: 5px 10px; 
+                font-size: 0.75em; 
+                gap: 8px; 
+                flex-wrap: wrap; /* 설정이 많아지면 줄바꿈 허용 */
+                height: auto; /* 높이 자동 조절 */
+            }
             
-            /* ▼▼▼ [핵심 1] 모바일 팝업 글자 크기 (대폭 축소) ▼▼▼ */
-            .modal-content h2 { font-size: 1.0em; }
-            .modal-content li { margin-bottom: 3px; }
-            .modal-content a { font-size: 1.0em; } /* 모바일 목록 제목 */
-            .article-meta { font-size: 0.7em; } /* 모바일 목록 날짜 */
+            /* ▼▼▼ [핵심 1 & 2] 모바일에서 PC용 링크/안내 숨기고, 모바일용 안내 보이기 ▼▼▼ */
+            .update-download-info a {
+                display: none; /* "실행 파일 다운로드" 링크 숨기기 */
+            }
+            .info-text {
+                display: none; /* 설정 바 내부의 안내 문구 숨기기 */
+            }
+            .info-text-mobile {
+                display: block; /* 모바일용 안내 문구 보이기 (설정 바 아래) */
+            }
+            .container { 
+                /* 설정 바(40px) + 모바일 안내문구(약 30px) 만큼 상단 여백 확보 */
+                padding-top: 70px; 
+                height: calc(100vh - 70px); 
+            }
+            /* ▲▲▲ [핵심 1 & 2] 수정 완료 ▲▲▲ */
+            
+            #wordcloud { width: 100%; margin-bottom: 5px; }
+            .modal-content a { font-size: 0.7em; }
+            .article-meta { font-size: 0.65em; }
         }
     </style>
 </head>
@@ -113,7 +137,6 @@
          </div>
          <div class="setting-item">
             <strong>최신 뉴스 기준:</strong> <span id="recent-minutes"></span>
-            <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
          </div>
          <div class="update-download-info">
             <span id="update-time">마지막 업데이트:</span>
@@ -121,7 +144,13 @@
                 실행 파일 다운로드(설정 조정 가능, 외부 pc 꺼짐 방지 포함)
             </a>
          </div>
+         <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
     </div>
+    
+    <div class="info-text-mobile">
+        깜빡이는 글자는 최신 뉴스를 의미합니다.
+    </div>
+    
     <div class="container">
         <div id="wordcloud"></div>
     </div>
@@ -174,11 +203,8 @@
                 }
 
                 WordCloud(document.getElementById('wordcloud'), { 
-                    list: wordcloudData, 
-                    backgroundColor: '#ffffff', 
-                    fontFamily: 'Malgun Gothic, sans-serif',
-                    weightFactor: 4,  // <--- 글자 크기
-                    minSize: 2,       // <--- 글자 최소 크기
+                    list: wordcloudData, backgroundColor: '#ffffff', fontFamily: 'Malgun Gothic, sans-serif',
+                    weightFactor: 4, minSize: 2, // 글자 크기 조정 (weightFactor: 6, minSize: 5)
                     classes: function(word, weight) {
                         return recentKeywords.has(word) ? 'blinking-word' : null;
                     },
@@ -215,12 +241,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
