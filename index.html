@@ -199,28 +199,24 @@
                 if (!wordcloudData |
 
 | wordcloudData.length === 0) {
-                    throw new Error("키워드 데이터가 비어있습니다. 잠시 후 자동 새로고침됩니다.");
-                }
+                throw new Error("키워드 데이터가 비어있습니다. 잠시 후 자동 새로고침됩니다.");
+                }
 
-                // ▼▼▼ [핵심] 화면 너비에 따라 글자 크기 옵션을 동적으로 설정 ▼▼▼
-                let weightFactorValue = 4;
-                let minSizeValue = 2;
+                // --- ▼▼▼ [핵심] 화면 크기에 따라 동적으로 글자 크기 조정 ▼▼▼ ---
+                // 현재 창의 가로 크기가 768px 이하이면 모바일로 간주합니다 (CSS 미디어 쿼리와 동일한 기준).
+                const isMobile = window.innerWidth <= 768;
+                
+                // 모바일일 경우 weightFactor를 2로, PC일 경우 4로 설정하여 글자 크기를 차별화합니다.
+                const weightFactorForDevice = isMobile ? 2 : 4; 
+                // --- ▲▲▲ [핵심] 수정 완료 ▲▲▲ ---
 
-                if (window.innerWidth <= 768) { // CSS의 모바일 분기점과 동일하게 설정
-                    weightFactorValue = 2.5; // 모바일용 가중치 (기존보다 작게)
-                    minSizeValue = 1;      // 모바일용 최소 크기 (기존보다 작게)
-                }
-                // ▲▲▲ [핵심] 수정 완료 ▲▲▲
-
-                WordCloud(document.getElementById('wordcloud'), { 
-                    list: wordcloudData, 
-                    backgroundColor: '#ffffff', 
-                    fontFamily: 'Malgun Gothic, sans-serif',
-                    weightFactor: weightFactorValue, // 동적으로 계산된 값 사용
-                    minSize: minSizeValue,       // 동적으로 계산된 값 사용
-                    classes: function(word, weight) {
-                        return recentKeywords.has(word)? 'blinking-word' : null;
-                    },
+                WordCloud(document.getElementById('wordcloud'), { 
+                    list: wordcloudData, backgroundColor: '#ffffff', fontFamily: 'Malgun Gothic, sans-serif',
+                    weightFactor: weightFactorForDevice, // 동적으로 계산된 weightFactor 값을 적용합니다.
+                    minSize: 2,
+                    classes: function(word, weight) {
+                        return recentKeywords.has(word) ? 'blinking-word' : null;
+                    },
                     click: function(item) {
                         const keyword = item;
                         const articles = articleMap[keyword] ||;
