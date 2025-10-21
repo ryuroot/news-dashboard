@@ -205,7 +205,7 @@
 
                 WordCloud(document.getElementById('wordcloud'), { 
                     list: wordcloudData, backgroundColor: '#ffffff', fontFamily: 'Malgun Gothic, sans-serif',
-                    weightFactor: 2, minSize: 2, // 글자 크기 조정
+                    weightFactor: 4, minSize: 2, // 글자 크기 조정
                     classes: function(word, weight) {
                         return recentKeywords.has(word) ? 'blinking-word' : null;
                     },
@@ -242,4 +242,5 @@
     </script>
 </body>
 </html>
+
 
