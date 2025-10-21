@@ -13,7 +13,7 @@
             overflow: hidden; 
         }
         
-       .settings-bar { 
+        .settings-bar { 
             position: fixed; 
             top: 0; left: 0; right: 0; 
             background-color: #fff; 
@@ -30,30 +30,30 @@
             overflow-x: auto; 
             -webkit-overflow-scrolling: touch; 
         }
-       .settings-bar::-webkit-scrollbar { display: none; }
+        .settings-bar::-webkit-scrollbar { display: none; }
         
-       .settings-bar strong { color: #000; flex-shrink: 0; }
-       .settings-bar span { flex-shrink: 0; }
-       .setting-item { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+        .settings-bar strong { color: #000; flex-shrink: 0; }
+        .settings-bar span { flex-shrink: 0; }
+        .setting-item { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
         
-       .update-download-info { 
+        .update-download-info { 
             display: flex; 
             align-items: center; 
             gap: 8px; 
             margin-left: auto; 
             flex-shrink: 0; 
         }
-       .update-download-info a { color: #007bff; text-decoration: none; font-weight: bold; }
-       .update-download-info a:hover { text-decoration: underline; }
+        .update-download-info a { color: #007bff; text-decoration: none; font-weight: bold; }
+        .update-download-info a:hover { text-decoration: underline; }
         
-       .info-text { 
+        .info-text { 
             margin-left: 5px; 
             font-size: 0.9em; 
             color: #666; 
             align-self: center; 
         }
         
-       .container { 
+        .container { 
             padding-top: 40px; 
             height: calc(100vh - 40px); 
             display: flex; 
@@ -61,7 +61,7 @@
             box-sizing: border-box; 
         }
         
-       .info-text-mobile {
+        .info-text-mobile {
             display: none; 
             text-align: center;
             font-size: 0.8em;
@@ -81,21 +81,21 @@
         }
         
         @keyframes blink-animation { 50% { opacity: 0.2; } }
-       .blinking-word { animation: blink-animation 1.5s infinite; }
+        .blinking-word { animation: blink-animation 1.5s infinite; }
         
         /* --- 모달(팝업) 스타일 --- */
-       .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
-       .modal-content { background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
-       .close-btn { float: right; font-size: 1.5rem; cursor: pointer; line-height: 1; }
-       .modal-content h2 { margin-top: 0; }
-       .modal-content ul { list-style-type: none; padding-left: 0; }
-       .modal-content li { margin-bottom: 7px; }
-       .modal-content a { text-decoration: none; color: #0056b3; font-weight: bold; font-size: 0.85em; }
-       .article-meta { font-size: 0.7em; color: #666; margin-top: 2px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
+        .close-btn { float: right; font-size: 1.5rem; cursor: pointer; line-height: 1; }
+        .modal-content h2 { margin-top: 0; }
+        .modal-content ul { list-style-type: none; padding-left: 0; }
+        .modal-content li { margin-bottom: 7px; }
+        .modal-content a { text-decoration: none; color: #0056b3; font-weight: bold; font-size: 0.85em; }
+        .article-meta { font-size: 0.7em; color: #666; margin-top: 2px; }
         
         /* --- 모바일 반응형 --- */
         @media (max-width: 768px) {
-           .settings-bar { 
+            .settings-bar { 
                 padding: 5px 10px; 
                 font-size: 0.75em; 
                 gap: 8px; 
@@ -103,29 +103,27 @@
                 height: auto; 
             }
             
-            /* ▼▼▼ [핵심] "마지막 업데이트" 텍스트 숨기기 ▼▼▼ */
-           .update-download-info #update-time {
+            .update-download-info #update-time {
                 display: none;
             }
-            /* ▲▲▲ [핵심] 수정 완료 ▲▲▲ */
             
-           .update-download-info a {
+            .update-download-info a {
                 display: none; /* "실행 파일 다운로드" 링크 숨기기 */
             }
-           .info-text {
+            .info-text {
                 display: none; /* 설정 바 내부의 안내 문구 숨기기 */
             }
-           .info-text-mobile {
+            .info-text-mobile {
                 display: block; /* 모바일용 안내 문구 보이기 (설정 바 아래) */
             }
-           .container { 
+            .container { 
                 padding-top: 70px; 
                 height: calc(100vh - 70px); 
             }
             
             #wordcloud { width: 100%; margin-bottom: 5px; }
-           .modal-content a { font-size: 0.7em; }
-           .article-meta { font-size: 0.65em; }
+            .modal-content a { font-size: 0.7em; }
+            .article-meta { font-size: 0.65em; }
         }
     </style>
 </head>
@@ -142,7 +140,7 @@
          </div>
          <div class="update-download-info">
             <span id="update-time">마지막 업데이트:</span>
-            <a href="[https://drive.google.com/file/d/1md68MgTuPPUnCgLmLdj9fJf4p9i8Cjpl/view](https://drive.google.com/file/d/1md68MgTuPPUnCgLmLdj9fJf4p9i8Cjpl/view)" target="_blank">
+            <a href="https://drive.google.com/file/d/1md68MgTuPPUnCgLmLdj9fJf4p9i8Cjpl/view" target="_blank">
                 실행 파일 다운로드(설정 조정 가능, 외부 pc 꺼짐 방지 포함)
             </a>
          </div>
@@ -164,18 +162,18 @@
         </div>
     </div>
 
-    <script src="[https://cdn.jsdelivr.net/gh/timdream/wordcloud2.js/src/wordcloud2.js](https://cdn.jsdelivr.net/gh/timdream/wordcloud2.js/src/wordcloud2.js)"></script>
+    <script src="https://cdn.jsdelivr.net/gh/timdream/wordcloud2.js/src/wordcloud2.js"></script>
     <script>
         // --- [1. Gist 설정] ---
         const USERNAME = "ryuroot";
         const WORDCLOUD_GIST_ID = "c3699def6985776859afb4e8af7cc6fd";
         const ARTICLE_MAP_GIST_ID = "0bb5b2c301317173f8f509179e316273";
 
-        // --- ---
+        // --- [2. Gist 데이터 URL 생성] ---
         const WORDCLOUD_URL = `https://gist.githubusercontent.com/${USERNAME}/${WORDCLOUD_GIST_ID}/raw/wordcloud_data.json?t=${new Date().getTime()}`;
         const ARTICLE_MAP_URL = `https://gist.githubusercontent.com/${USERNAME}/${ARTICLE_MAP_GIST_ID}/raw/article_map.json?t=${new Date().getTime()}`;
 
-        // --- [3. 나머지 자바스크립트 코드 (이전과 동일)] ---
+        // --- [3. 나머지 자바스크립트 코드] ---
         const modal = document.getElementById('article-modal');
         const modalKeyword = document.getElementById('modal-keyword');
         const articleList = document.getElementById('article-list');
@@ -192,34 +190,43 @@
             document.getElementById('refresh-interval').textContent = "5분";
             document.getElementById('recent-minutes').textContent = "20분";
             
-            Promise.all().then(([wordcloudJson, articleMap]) => {
+            Promise.all([
+                fetch(WORDCLOUD_URL).then(res => {
+                    if (!res.ok) throw new Error(`워드클라우드 데이터 로드 실패: ${res.status}`);
+                    return res.json();
+                }),
+                fetch(ARTICLE_MAP_URL).then(res => {
+                    if (!res.ok) throw new Error(`기사 맵 데이터 로드 실패: ${res.status}`);
+                    return res.json();
+                })
+            ]).then(([wordcloudJson, articleMap]) => {
                 const wordcloudData = wordcloudJson.keywords;
                 const recentKeywords = new Set(wordcloudJson.recent_keywords);
                 
-                if (!wordcloudData |
+                if (!wordcloudData || wordcloudData.length === 0) {
+                    throw new Error("키워드 데이터가 비어있습니다. 잠시 후 자동 새로고침됩니다.");
+                }
 
-| wordcloudData.length === 0) {
-                throw new Error("키워드 데이터가 비어있습니다. 잠시 후 자동 새로고침됩니다.");
-                }
+                // --- ▼▼▼ [핵심 수정] 화면 크기에 따라 동적으로 글자 크기 조정 ▼▼▼ ---
+                // 현재 창의 가로 크기가 768px 이하이면 모바일로 간주합니다.
+                const isMobile = window.innerWidth <= 768;
+                
+                // 모바일일 경우 weightFactor를 2로, PC일 경우 4로 설정하여 글자 크기를 차별화합니다.
+                const weightFactorForDevice = isMobile ? 2 : 4;
+                // --- ▲▲▲ [핵심 수정] 완료 ▲▲▲ ---
 
-                // --- ▼▼▼ [핵심] 화면 크기에 따라 동적으로 글자 크기 조정 ▼▼▼ ---
-                // 현재 창의 가로 크기가 768px 이하이면 모바일로 간주합니다 (CSS 미디어 쿼리와 동일한 기준).
-                const isMobile = window.innerWidth <= 768;
-                
-                // 모바일일 경우 weightFactor를 2로, PC일 경우 4로 설정하여 글자 크기를 차별화합니다.
-                const weightFactorForDevice = isMobile ? 2 : 4; 
-                // --- ▲▲▲ [핵심] 수정 완료 ▲▲▲ ---
-
-                WordCloud(document.getElementById('wordcloud'), { 
-                    list: wordcloudData, backgroundColor: '#ffffff', fontFamily: 'Malgun Gothic, sans-serif',
-                    weightFactor: weightFactorForDevice, // 동적으로 계산된 weightFactor 값을 적용합니다.
-                    minSize: 2,
-                    classes: function(word, weight) {
-                        return recentKeywords.has(word) ? 'blinking-word' : null;
-                    },
+                WordCloud(document.getElementById('wordcloud'), { 
+                    list: wordcloudData,
+                    backgroundColor: '#ffffff',
+                    fontFamily: 'Malgun Gothic, sans-serif',
+                    weightFactor: weightFactorForDevice, // 동적으로 계산된 값을 적용
+                    minSize: 2,
+                    classes: function(word, weight) {
+                        return recentKeywords.has(word) ? 'blinking-word' : null;
+                    },
                     click: function(item) {
-                        const keyword = item;
-                        const articles = articleMap[keyword] ||;
+                        const keyword = item[0];
+                        const articles = articleMap[keyword] || [];
                         modalKeyword.innerText = `'${keyword}' 관련 뉴스`;
                         articleList.innerHTML = '';
                         if (articles.length > 0) {
@@ -246,7 +253,9 @@
         }
         
         initializeDashboard();
+        // 5분(300000ms) 마다 페이지를 새로고침하여 데이터를 업데이트합니다.
         setTimeout(() => { location.reload(); }, 300000);
     </script>
 </body>
 </html>
+
