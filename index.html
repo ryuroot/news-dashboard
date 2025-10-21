@@ -64,7 +64,7 @@
         .info-text-mobile {
             display: none; 
             text-align: center;
-            font-size: 0.9em;
+            font-size: 0.9em; /* "깜밖이는 글자" 크기 */
             color: #666;
             padding: 4px 0;
         }
@@ -96,8 +96,8 @@
         .modal-content h2 { margin-top: 0; }
         .modal-content ul { list-style-type: none; padding-left: 0; }
         .modal-content li { margin-bottom: 7px; }
-        .modal-content a { text-decoration: none; color: #0056b3; font-weight: bold; font-size: 1em; }
-        .article-meta { font-size: 0.7em; color: #666; margin-top: 2px; }
+        .modal-content a { text-decoration: none; color: #0056b3; font-weight: bold; font-size: 0.9em; } /* 뉴스 제목 */
+        .article-meta { font-size: 0.8em; color: #666; margin-top: 2px; } /* 뉴스 시간 */
         
         /* --- 모바일 반응형 --- */
         @media (max-width: 768px) {
@@ -120,8 +120,8 @@
             }
             
             #wordcloud { width: 100%; margin-bottom: 5px; }
-            .modal-content a { font-size: 0.7em; }
-            .article-meta { font-size: 0.65em; }
+            .modal-content a { font-size: 0.9em; } /* --- 뉴스 제목 --- */
+            .article-meta { font-size: 0.8em; } /* --- 뉴스 시간 --- */
         }
     </style>
 </head>
@@ -135,7 +135,6 @@
          </div>
          <div class="setting-item">
             <strong>최신 뉴스 기준:</strong> <span id="recent-minutes"></span>
-            <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
          </div>
          <div class="update-download-info">
             <span id="update-time">마지막 업데이트:</span>
@@ -143,6 +142,7 @@
                 실행 파일 다운로드(설정 조정 가능, 외부 pc 꺼짐 방지 포함)
             </a>
          </div>
+         <span class="info-text">깜빡이는 글자는 최신 뉴스를 의미합니다.</span>
     </div>
     
     <div class="container">
@@ -281,6 +281,3 @@
     </script>
 </body>
 </html>
-
-
-
