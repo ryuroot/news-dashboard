@@ -60,7 +60,6 @@
             box-sizing: border-box; 
         }
         
-        /* ▼▼▼ [핵심 2] 모바일용 안내 문구 (PC에서는 숨김) ▼▼▼ */
         .info-text-mobile {
             display: none; 
             text-align: center;
@@ -69,7 +68,6 @@
             padding: 8px 0;
             background-color: #f0f2f5;
         }
-        /* ▲▲▲ [핵심 2] 추가 완료 ▲▲▲ */
         
         #wordcloud { 
             flex-grow: 1; 
@@ -84,7 +82,7 @@
         @keyframes blink-animation { 50% { opacity: 0.2; } }
         .blinking-word { animation: blink-animation 1.5s infinite; }
         
-        /* --- 모달(팝업) 스타일 (글자 크기 축소됨) --- */
+        /* --- 모달(팝업) 스타일 --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-content { background: white; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
         .close-btn { float: right; font-size: 1.5rem; cursor: pointer; line-height: 1; }
@@ -100,11 +98,16 @@
                 padding: 5px 10px; 
                 font-size: 0.75em; 
                 gap: 8px; 
-                flex-wrap: wrap; /* 설정이 많아지면 줄바꿈 허용 */
-                height: auto; /* 높이 자동 조절 */
+                flex-wrap: wrap;
+                height: auto; 
             }
             
-            /* ▼▼▼ [핵심 1 & 2] 모바일에서 PC용 링크/안내 숨기고, 모바일용 안내 보이기 ▼▼▼ */
+            /* ▼▼▼ [핵심] "마지막 업데이트" 텍스트 숨기기 ▼▼▼ */
+            .update-download-info #update-time {
+                display: none;
+            }
+            /* ▲▲▲ [핵심] 수정 완료 ▲▲▲ */
+            
             .update-download-info a {
                 display: none; /* "실행 파일 다운로드" 링크 숨기기 */
             }
@@ -115,11 +118,9 @@
                 display: block; /* 모바일용 안내 문구 보이기 (설정 바 아래) */
             }
             .container { 
-                /* 설정 바(40px) + 모바일 안내문구(약 30px) 만큼 상단 여백 확보 */
                 padding-top: 70px; 
                 height: calc(100vh - 70px); 
             }
-            /* ▲▲▲ [핵심 1 & 2] 수정 완료 ▲▲▲ */
             
             #wordcloud { width: 100%; margin-bottom: 5px; }
             .modal-content a { font-size: 0.7em; }
@@ -204,7 +205,7 @@
 
                 WordCloud(document.getElementById('wordcloud'), { 
                     list: wordcloudData, backgroundColor: '#ffffff', fontFamily: 'Malgun Gothic, sans-serif',
-                    weightFactor: 4, minSize: 2, // 글자 크기 조정 (weightFactor: 6, minSize: 5)
+                    weightFactor: 4, minSize: 2, // 글자 크기 조정
                     classes: function(word, weight) {
                         return recentKeywords.has(word) ? 'blinking-word' : null;
                     },
